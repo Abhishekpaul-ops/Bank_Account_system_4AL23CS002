@@ -140,6 +140,7 @@ public class BankAccountManagementSystem extends JFrame {
     private final JRadioButton balanceConstructorButton;
     private final JRadioButton fullConstructorButton;
     private final JTextArea detailsArea;
+    private final JTable accountTable;
     private final DefaultTableModel tableModel;
     private final List<BankAccount> accounts;
 
@@ -158,6 +159,7 @@ public class BankAccountManagementSystem extends JFrame {
                 new String[]{"Type", "Account Number", "Holder", "Balance", "Minimum Balance"},
                 0
         );
+        accountTable = new JTable(tableModel);
 
         configureWindow();
         add(buildHeader(), BorderLayout.NORTH);
@@ -274,7 +276,6 @@ public class BankAccountManagementSystem extends JFrame {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(0, 14, 0, 0));
 
-        JTable accountTable = new JTable(tableModel);
         accountTable.setRowHeight(26);
         accountTable.setFillsViewportHeight(true);
         accountTable.getSelectionModel().addListSelectionListener(event -> {
@@ -299,8 +300,11 @@ public class BankAccountManagementSystem extends JFrame {
     private JPanel buildFooter() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         panel.setBorder(BorderFactory.createEmptyBorder(0, 18, 14, 18));
+        JButton deleteButton = new JButton("Delete Selected Account");
         JButton exitButton = new JButton("Exit");
+        deleteButton.addActionListener(event -> deleteSelectedAccount());
         exitButton.addActionListener(event -> dispose());
+        panel.add(deleteButton);
         panel.add(exitButton);
         return panel;
     }
@@ -388,6 +392,29 @@ public class BankAccountManagementSystem extends JFrame {
             }
         }
         return false;
+    }
+
+    private void deleteSelectedAccount() {
+        int selectedRow = accountTable.getSelectedRow();
+        if (selectedRow < 0) {
+            showError("Please select an account from the table to delete.");
+            return;
+        }
+
+        int modelRow = accountTable.convertRowIndexToModel(selectedRow);
+        BankAccount selectedAccount = accounts.get(modelRow);
+        int choice = JOptionPane.showConfirmDialog(
+                this,
+                "Delete account " + selectedAccount.getAccountNumber() + "?",
+                "Confirm Delete",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (choice == JOptionPane.YES_OPTION) {
+            accounts.remove(modelRow);
+            tableModel.removeRow(modelRow);
+            detailsArea.setText("");
+        }
     }
 
     private void clearForm() {

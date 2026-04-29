@@ -29,6 +29,7 @@ This project demonstrates object-oriented programming concepts using:
 - Prevent duplicate account numbers
 - Account table showing created accounts
 - Detail panel showing selected account information
+- Delete selected account option
 - Clear form option
 
 ## Tech Stack
@@ -98,6 +99,7 @@ java -cp out bank.BankAccountManagementSystem
 6. Click **Create Account**.
 7. View the created account in the account table.
 8. Select an account from the table to view its full details.
+9. To delete an account, select it from the table and click **Delete Selected Account**.
 
 ## Notes
 
